@@ -41,7 +41,7 @@ float calculadistancia(city *Map, int city1, int city2)
   return distancia;
 }
 //função de gerar a permutação
-int *permutaSemRep(int a, int *v, city *Map)
+int *permutaSemRep(int a, int *v, city *Map, FILE* saida , FILE* saida1)
 {
 	int i=1, j, k, z;
 
@@ -57,29 +57,35 @@ int *permutaSemRep(int a, int *v, city *Map)
 			if (i >= 0) v[i]++;
 
 		}
-	for (j=0; j<a-1; j++)
-		for (k=j+1; k<a; k++)
-		if (v[k] == v[j])
-        	{
-          		z=0;
-          		break;
-        	}
+	  for (j=0; j<a-1; j++)
+		  for (k=j+1; k<a; k++)
+		    if (v[k] == v[j])
+        {
+          z=0;
+          break;
+        }
 
-    	if (z) prtvet(a, v, Map);
+
+    	if (z) prtvet(a, v, Map, saida , saida1);
 	}
   return 0;
 }
 //imprime as coordenadas de cada cidade.
-void prtvet(int n, int *v, city *Map)
+void prtvet(int n, int *v, city *Map , FILE *arq_out , FILE *arq_out1)
 {
 	int i;
   int j;
 	for ( i = 0; i < n; i++)
   {
     j=v[i];
-    printf("(%d,%d)\t", Map[j-1].coord_X , Map[j-1].coord_y);
+    fprintf(arq_out , "(%d,%d)\t", Map[j-1].coord_X , Map[j-1].coord_y);
+    fprintf(arq_out1, "%d\t", Map[j-1].Cidade );
   }
-	printf("\n");
+  v[n] = v[0];
+	fprintf(arq_out , "\n");
+  //fprintf(arq_out1 , "\n");
+  //Map[j].Cidade = Map[0].Cidade;
+  fprintf(arq_out1, "%d\n", Map[n].Cidade);
 }
 
 //calcula o numero de soluções e imprime.
@@ -100,6 +106,7 @@ void Learquivo (char *file)
   FILE *arq = fopen ( file , "r");
   //tratamento de error
   city *Map;
+  char saida[30] , saida1[30], saida2[30]; //tem que ser vetor
   if (arq == NULL)
   {
     printf("Erro ao abrir arquivo!!!\n");
@@ -114,7 +121,31 @@ void Learquivo (char *file)
   {
     fscanf(arq , "%d %d %d", &Map[i].Cidade , &Map[i].coord_X , &Map[i].coord_y);
   }
-  permutaSemRep(NumCity , Cidades, Map);
+
+  //copia a string que formará o nome de saída
+  sprintf(saida , "instancia_%d_p1.txt", NumCity); //sprintf não aceita ponteiro
+  sprintf(saida1 , "instancia_%d_p2.txt", NumCity); //sprintf não aceita ponteiro
+  sprintf(saida2 , "instancia_%d_p3.txt", NumCity); //sprintf não aceita ponteiro
+  //abre o arquivo de saída
+  FILE *arq_out = fopen(saida , "w");
+  FILE *arq_out1 = fopen(saida1 , "w");
+  FILE *arq_out2 = fopen(saida2 , "w");
+  //verifica se o arquivo de saída foi aberto
+  if (arq_out == NULL || arq_out1 == NULL || arq_out2 == NULL)
+  {
+    printf("Erro ao criar arquivo de saida");
+    return;
+  }
+  //imprime no arquivo o numero de soluções na primeira linha
+  fprintf(arq_out, "%d\n", sol);
+  fprintf(arq_out1, "%d\n", sol);
+  //chama a função que gera as permutações
+  printf("Arquivo %s, criado com sucesso\n\nCalculando Rotas ........\nSalvando em arquivo\n\n", saida);
+  permutaSemRep(NumCity , Cidades, Map , arq_out , arq_out1);
+  fclose(arq_out);
+  printf("Arquivo salvo com sucesso.\n\n\n");
+  fclose(arq_out1);
+  fclose(arq_out2);
   free(Map);
   fclose (arq);
 }

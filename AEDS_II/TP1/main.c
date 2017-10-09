@@ -23,9 +23,11 @@ int main(int argc, char **argv){
 		printf("Erro de Argumentos\n");
 		return 0;
 	}
+	//começa a contar o tempo de execução
 	TempoInicio = clock();
 	// recebe os dados das cidades do arquivo
 	Learquivo(file);
+	//termina a temporização
 	TempoFim = clock();
 	TempoDecorrido = (double)(TempoFim - TempoInicio) / CLOCKS_PER_SEC;
 	printf("Tempo decorrido em segundos: %lf.\n", TempoDecorrido);
