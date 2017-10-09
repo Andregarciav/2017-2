@@ -1,13 +1,13 @@
-all: tp0
+all: tp1
 
-tp0: main.o analises.o
-	gcc -o tp0 main.o analises.o -Wall -Wextra
+tp1: main.o caixeiro.o
+	gcc -o tp1 main.o caixeiro.o -Wall -Wextra -lm
 
 main.o: main.c
 	gcc -c main.c -Wall -Wextra
 
-analises.o: analises.c
-	gcc -c analises.c -Wall -Wextra
+caixeiro.o: caixeiro.c
+	gcc -c caixeiro.c -Wall -Wextra
 
 clean:
-	rm tp0 *.o
+	rm tp1 *.o

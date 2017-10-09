@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 /*Declaração da biblioteca
  *criada para o problema.
  */
@@ -15,12 +16,12 @@ int *criaCidade(int N)
   int *Vetorcidades;
   Vetorcidades = (int*)malloc(N*sizeof(int));
   for (i=0 ; i < N ; i++){
-    Vetorcidades[i] = 1;
+    Vetorcidades[i] = i+1;
   }
   return Vetorcidades;
 }
 //Preenche a struct de dados das cidades
-int *PreencheCidades(int N , int *Vetorcidades)
+/*int *PreencheCidades(int N , int *Vetorcidades)
 {
   city *Map;
   Map = (city*)malloc(N*sizeof(city));
@@ -31,7 +32,7 @@ int *PreencheCidades(int N , int *Vetorcidades)
   permutaSemRep(N , Vetorcidades, Map);
   free(Map);
   return 0;
-}
+}*/
 //Calcula a distância entre duas cidades
 float calculadistancia(city *Map, int city1, int city2)
 {
@@ -80,11 +81,46 @@ void prtvet(int n, int *v, city *Map)
   }
 	printf("\n");
 }
+
 //calcula o numero de soluções e imprime.
-void calculaSolucao(int Numsol)
+int calculaSolucao(int Numsol)
 {
   int fat, i;
    fat = 1;
    for (i = 1; i <= Numsol; i++) fat = fat * i;
    printf("%d\n", fat);
+   return Numsol;
 }
+
+// Função de leitura de arquivo e envio de dados para as funções
+void Learquivo (char *file)
+{
+  char buffer[MAX];
+  int NumCity , *Cidades, sol;
+  FILE *arq = fopen ( file , "r");
+  //tratamento de error
+  city *Map;
+  if (arq == NULL)
+  {
+    printf("Erro ao abrir arquivo!!!\n");
+    return;
+  }
+  fgets ( buffer , 3 , arq);
+  NumCity = atoi (buffer);
+  sol = calculaSolucao(NumCity);
+  Cidades = criaCidade(NumCity);
+  Map = (city*)malloc(NumCity*sizeof(city));
+  for (i=0 ; i < NumCity ; i++)
+  {
+    fscanf(arq , "%d %d %d", &Map[i].Cidade , &Map[i].coord_X , &Map[i].coord_y);
+  }
+  permutaSemRep(NumCity , Cidades, Map);
+  free(Map);
+  fclose (arq);
+}
+//Calcula o tamanho do caminho
+// int calculaCaminho(city *Map, int NumCity, int *VetorDeCidades)
+// {
+//   int i;
+//   for ( i=0 ; i < NumCity ; i++);
+// }
