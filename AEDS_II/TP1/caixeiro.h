@@ -15,4 +15,7 @@ int *permutaSemRep(int, int*, city*, FILE*, FILE*);
 
 void prtvet(int, int*, city*, FILE*, FILE*);
 int calculaSolucao(int);
+//função que lé o arquivo de entrada e gera o de saida
 void Learquivo(char*);
+//Função que calcula a matriz de adjacencia
+double **CriaAdjacencia(int , city *);

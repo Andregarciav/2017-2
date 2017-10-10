@@ -79,13 +79,12 @@ void prtvet(int n, int *v, city *Map , FILE *arq_out , FILE *arq_out1)
   {
     j=v[i];
     fprintf(arq_out , "(%d,%d)\t", Map[j-1].coord_X , Map[j-1].coord_y);
-    fprintf(arq_out1, "%d\t", Map[j-1].Cidade );
+    fprintf(arq_out1, "%d ", Map[j-1].Cidade );
   }
-  v[n] = v[0];
 	fprintf(arq_out , "\n");
   //fprintf(arq_out1 , "\n");
   //Map[j].Cidade = Map[0].Cidade;
-  fprintf(arq_out1, "%d\n", Map[n].Cidade);
+  fprintf(arq_out1, "%d\n", Map[v[0]-1].Cidade);
 }
 
 //calcula o numero de soluções e imprime.
@@ -95,7 +94,7 @@ int calculaSolucao(int Numsol)
    fat = 1;
    for (i = 1; i <= Numsol; i++) fat = fat * i;
    printf("%d\n", fat);
-   return Numsol;
+   return fat;
 }
 
 // Função de leitura de arquivo e envio de dados para as funções
@@ -121,14 +120,14 @@ void Learquivo (char *file)
   {
     fscanf(arq , "%d %d %d", &Map[i].Cidade , &Map[i].coord_X , &Map[i].coord_y);
   }
-
+  CriaAdjacencia(NumCity , Map);
   //copia a string que formará o nome de saída
   sprintf(saida , "instancia_%d_p1.txt", NumCity); //sprintf não aceita ponteiro
   sprintf(saida1 , "instancia_%d_p2.txt", NumCity); //sprintf não aceita ponteiro
   sprintf(saida2 , "instancia_%d_p3.txt", NumCity); //sprintf não aceita ponteiro
   //abre o arquivo de saída
   FILE *arq_out = fopen(saida , "w");
-  FILE *arq_out1 = fopen(saida1 , "w");
+  FILE *arq_out1 = fopen(controle , "w");
   FILE *arq_out2 = fopen(saida2 , "w");
   //verifica se o arquivo de saída foi aberto
   if (arq_out == NULL || arq_out1 == NULL || arq_out2 == NULL)
@@ -145,13 +144,30 @@ void Learquivo (char *file)
   fclose(arq_out);
   printf("Arquivo salvo com sucesso.\n\n\n");
   fclose(arq_out1);
+  arq_out1 = fopen(controle , "r");
+  calculaCaminho();//continuar daqui
   fclose(arq_out2);
   free(Map);
   fclose (arq);
 }
 //Calcula o tamanho do caminho
-// int calculaCaminho(city *Map, int NumCity, int *VetorDeCidades)
-// {
-//   int i;
-//   for ( i=0 ; i < NumCity ; i++);
-// }
+int calculaCaminho(city *Map, int NumCity, int *VetorDeCidades)
+{
+  int i;
+  for ( i=0 ; i < NumCity ; i++);
+}
+
+double **CriaAdjacencia(int NumeroCidades, city *Map)
+{
+  int i ,  j ;
+  double **M = (double**)malloc(NumeroCidades*sizeof(double*));
+  for ( i = 1; i <= NumeroCidades; i++)
+  {
+    M[i]=(double*)malloc(NumeroCidades*sizeof(double));
+    for (j = 1; j <= NumeroCidades; j++)
+    {
+      M[i][j] = calculadistancia(Map , i , j);
+    }
+  }
+  return M;
+}
