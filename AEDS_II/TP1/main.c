@@ -8,13 +8,12 @@
 #include "caixeiro.h"
 
 //chamada principal do código
-int main(int argc, char **argv){
+int main(int argc, char **argv)
+{
   //variável que recebe do arquivo o numero de cidades a serem visitadas
 	//variaveis para medir o tempo de execução.
 	clock_t TempoInicio, TempoFim;
 	double TempoDecorrido;
-	//int NumeroCidades;
-	//int *Cidades;
 	char *file;
 	file = argv[1];
 	//tratamento de erro
@@ -33,11 +32,5 @@ int main(int argc, char **argv){
 	printf("Tempo decorrido em segundos: %lf.\n", TempoDecorrido);
 	TempoDecorrido /= 60;
 	printf("Tempo decorrido em minutos: %lf.\n", TempoDecorrido);
-	// cria um vetor com as cidades.
-	//Cidades = criaCidade(NumeroCidades);
-	//Preenche os dados das cidades
-	//PreencheCidades(NumeroCidades , Cidades);
-	//libera memória de alocação dinâmica
-	//free(Cidades);
 	return 0;
 }

@@ -19,3 +19,5 @@ int calculaSolucao(int);
 void Learquivo(char*);
 //Função que calcula a matriz de adjacencia
 double **CriaAdjacencia(int , city *);
+//Calcula o caminho
+void calculaCaminho ( FILE *arq_out1, FILE *arq_out, int NumCity , double **Matriz, FILE* arq_out2);

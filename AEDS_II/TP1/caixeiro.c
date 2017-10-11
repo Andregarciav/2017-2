@@ -15,24 +15,13 @@ int *criaCidade(int N)
 {
   int *Vetorcidades;
   Vetorcidades = (int*)malloc(N*sizeof(int));
-  for (i=0 ; i < N ; i++){
+  for (i=0 ; i < N ; i++)
+  {
     Vetorcidades[i] = i+1;
   }
   return Vetorcidades;
 }
-//Preenche a struct de dados das cidades
-/*int *PreencheCidades(int N , int *Vetorcidades)
-{
-  city *Map;
-  Map = (city*)malloc(N*sizeof(city));
-  for (i=0 ; i < N ; i++)
-  {
-    scanf("%d %d %d", &Map[i].Cidade , &Map[i].coord_X , &Map[i].coord_y);
-  }
-  permutaSemRep(N , Vetorcidades, Map);
-  free(Map);
-  return 0;
-}*/
+
 //Calcula a distância entre duas cidades
 float calculadistancia(city *Map, int city1, int city2)
 {
@@ -40,6 +29,7 @@ float calculadistancia(city *Map, int city1, int city2)
   distancia = sqrt(pow((Map[city1-1].coord_X-Map[city2-1].coord_X) , 2) + pow((Map[city1-1].coord_y-Map[city2-1].coord_y) , 2));
   return distancia;
 }
+
 //função de gerar a permutação
 int *permutaSemRep(int a, int *v, city *Map, FILE* saida , FILE* saida1)
 {
@@ -70,6 +60,7 @@ int *permutaSemRep(int a, int *v, city *Map, FILE* saida , FILE* saida1)
 	}
   return 0;
 }
+
 //imprime as coordenadas de cada cidade.
 void prtvet(int n, int *v, city *Map , FILE *arq_out , FILE *arq_out1)
 {
@@ -82,8 +73,6 @@ void prtvet(int n, int *v, city *Map , FILE *arq_out , FILE *arq_out1)
     fprintf(arq_out1, "%d ", Map[j-1].Cidade );
   }
 	fprintf(arq_out , "\n");
-  //fprintf(arq_out1 , "\n");
-  //Map[j].Cidade = Map[0].Cidade;
   fprintf(arq_out1, "%d\n", Map[v[0]-1].Cidade);
 }
 
@@ -92,7 +81,10 @@ int calculaSolucao(int Numsol)
 {
   int fat, i;
    fat = 1;
-   for (i = 1; i <= Numsol; i++) fat = fat * i;
+   for (i = 1; i <= Numsol; i++)
+   {
+     fat = fat * i;
+   }
    printf("%d\n", fat);
    return fat;
 }
@@ -102,6 +94,7 @@ void Learquivo (char *file)
 {
   char buffer[MAX];
   int NumCity , *Cidades, sol;
+  double **Matriz;
   FILE *arq = fopen ( file , "r");
   //tratamento de error
   city *Map;
@@ -120,14 +113,14 @@ void Learquivo (char *file)
   {
     fscanf(arq , "%d %d %d", &Map[i].Cidade , &Map[i].coord_X , &Map[i].coord_y);
   }
-  CriaAdjacencia(NumCity , Map);
+  Matriz = CriaAdjacencia(NumCity , Map);
   //copia a string que formará o nome de saída
   sprintf(saida , "instancia_%d_p1.txt", NumCity); //sprintf não aceita ponteiro
   sprintf(saida1 , "instancia_%d_p2.txt", NumCity); //sprintf não aceita ponteiro
   sprintf(saida2 , "instancia_%d_p3.txt", NumCity); //sprintf não aceita ponteiro
   //abre o arquivo de saída
   FILE *arq_out = fopen(saida , "w");
-  FILE *arq_out1 = fopen(controle , "w");
+  FILE *arq_out1 = fopen("controle" , "w");
   FILE *arq_out2 = fopen(saida2 , "w");
   //verifica se o arquivo de saída foi aberto
   if (arq_out == NULL || arq_out1 == NULL || arq_out2 == NULL)
@@ -141,20 +134,35 @@ void Learquivo (char *file)
   //chama a função que gera as permutações
   printf("Arquivo %s, criado com sucesso\n\nCalculando Rotas ........\nSalvando em arquivo\n\n", saida);
   permutaSemRep(NumCity , Cidades, Map , arq_out , arq_out1);
+  //Fecha o arquivo p1
   fclose(arq_out);
   printf("Arquivo salvo com sucesso.\n\n\n");
+  //Fecha o arquivo de controle
   fclose(arq_out1);
-  arq_out1 = fopen(controle , "r");
-  calculaCaminho();//continuar daqui
+  //Abre o arquivo de controle para leitura
+  arq_out1 = fopen("controle" , "r");
+	//Abre o arquivo de saída como gravação
+  arq_out = fopen(saida1 , "w");
+  calculaCaminho(arq_out1 , arq_out, NumCity , *Matriz, arq_out2);
   fclose(arq_out2);
   free(Map);
   fclose (arq);
 }
 //Calcula o tamanho do caminho
-int calculaCaminho(city *Map, int NumCity, int *VetorDeCidades)
+void calculaCaminho ( FILE *arq_out1, FILE *arq_out, int NumCity , double **Matriz, FILE* arq_out2)
 {
-  int i;
-  for ( i=0 ; i < NumCity ; i++);
+  int j = 0;
+  int k = 0;
+  double acumula = 0;
+  while (!feof(arq_out1))
+  {
+  for ( i = 1 ; i < NumCity ; i++)
+  {
+    fscanf(arq_out1, "%d %d", &j, &k);
+    acumula = acumula + Matriz[j][k];
+  }
+  fprintf(arq_out2, "%lf\n", acumula);
+  }
 }
 
 double **CriaAdjacencia(int NumeroCidades, city *Map)
