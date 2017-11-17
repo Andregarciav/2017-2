@@ -21,8 +21,8 @@ int main(int argc, char **argv)
     saida = argv[2];
     dicionario = argv[3];
 
-    Ler_entrada (entrada);
     printf("%s , %s , %s\n", entrada , saida, dicionario);
+    Ler_entrada (entrada);
 
     return 0;
 }

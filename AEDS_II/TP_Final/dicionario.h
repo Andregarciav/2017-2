@@ -2,6 +2,7 @@
 
 //struct dicionario
 typedef struct dicionario{
+	int chave;
 	char *palavra;
 	char *def;
 }dici;

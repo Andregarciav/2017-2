@@ -17,7 +17,7 @@ int *criaCidade(int N)
   Vetorcidades = (int*)malloc(N*sizeof(int));
   for (i=0 ; i < N ; i++)
   {
-    Vetorcidades[i] = i+1;
+    Vetorcidades[i] = 1;
   }
   return Vetorcidades;
 }
@@ -77,15 +77,15 @@ void prtvet(int n, int *v, city *Map , FILE *arq_out , FILE *arq_out1)
 }
 
 //calcula o numero de soluções e imprime.
-int calculaSolucao(int Numsol)
+double calculaSolucao(int Numsol)
 {
-  int fat, i;
+  double fat, i;
    fat = 1;
    for (i = 1; i <= Numsol; i++)
    {
      fat = fat * i;
    }
-   printf("%d\n", fat);
+   //printf("%lf\n", fat);
    return fat;
 }
 
@@ -106,7 +106,8 @@ void Learquivo (char *file)
   }
   fgets ( buffer , 3 , arq);
   NumCity = atoi (buffer);
-  sol = calculaSolucao(NumCity);
+  sol = (int)calculaSolucao(NumCity);
+  printf("%d\n", sol);
   Cidades = criaCidade(NumCity);
   Map = (city*)malloc(NumCity*sizeof(city));
   for (i=0 ; i < NumCity ; i++)
@@ -143,26 +144,57 @@ void Learquivo (char *file)
   arq_out1 = fopen("controle" , "r");
 	//Abre o arquivo de saída como gravação
   arq_out = fopen(saida1 , "w");
-  calculaCaminho(arq_out1 , arq_out, NumCity , *Matriz, arq_out2);
+  calculaCaminho(arq_out1 ,  NumCity , Matriz, arq_out2 , arq_out);
   fclose(arq_out2);
   free(Map);
   fclose (arq);
 }
 //Calcula o tamanho do caminho
-void calculaCaminho ( FILE *arq_out1, FILE *arq_out, int NumCity , double **Matriz, FILE* arq_out2)
+void calculaCaminho ( FILE *arq_out1,  int NumCity , double **Matriz, FILE* arq_out2, FILE* arq_out)
 {
   int j = 0;
   int k = 0;
+  int aux = 0;
+  int leituras = 0;
+  char linha[MAX];
+  int *Vetor;
   double acumula = 0;
-  while (!feof(arq_out1))
+  double compara = 0;
+  compara = calculaSolucao(13);
+  Vetor = (int*)malloc(NumCity*sizeof(int));
+  fgets(linha , MAX , arq_out1);
+  leituras = atoi(linha);
+  for (aux = 0 ; aux < leituras ; aux++)
   {
-  for ( i = 1 ; i < NumCity ; i++)
-  {
-    fscanf(arq_out1, "%d %d", &j, &k);
-    acumula = acumula + Matriz[j][k];
+    acumula = 0;
+    fgets(linha , MAX , arq_out1);
+    Vetor[0] = atoi(strtok(linha, " "));
+    if ( linha == NULL ) break;
+    for (i=1 ; i < NumCity ; i++)
+    {
+      Vetor[i] = atoi(strtok(NULL, " "));
+    }
+
+    i = 0;
+    while(i < NumCity)
+    {
+      j = Vetor[i];
+      k = Vetor[i+1];
+      acumula += Matriz[j][k];
+      i++;
+    }
+    if (acumula <= compara)
+    {
+      compara = acumula;
+      for (i = 0 ; i < NumCity ; i++)
+      {
+          fprintf(arq_out, "%d ", Vetor[i]);
+      }
+    }
+    fprintf(arq_out2, "%lf\n", acumula);
+    fprintf(arq_out, "%lf\n", acumula);
   }
-  fprintf(arq_out2, "%lf\n", acumula);
-  }
+  free(Vetor);
 }
 
 double **CriaAdjacencia(int NumeroCidades, city *Map)

@@ -24,7 +24,11 @@ void Ler_entrada(char *Arquivo_entrada)
 		comando = strtok(buffer, " # ");
 		dicionario->palavra = strtok (NULL," # ");
 		dicionario->def = strtok (NULL," # ");
-		if (strcmp(comando, add)) printf("DEU\n");
+		if (strcmp(comando, add))
+		{
+			 printf("DEU\n");
+			 return;
+		}
 		printf("%s\n",buffer);
 
 	}
