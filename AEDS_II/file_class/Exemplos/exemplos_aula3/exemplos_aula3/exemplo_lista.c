@@ -26,7 +26,7 @@ node_t * cria_lista_vazia()
 node_t * insere_lista(int x, node_t ** head)
 {
 	node_t * atual = *head;
-	if(next!=NULL)
+	if(atual->next != NULL)
 	{
 		while(atual->next!=NULL)
 		{	

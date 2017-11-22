@@ -3,40 +3,59 @@
 #include <string.h>
 
 #include "dicionario.h"
+#include "tree.h"
+
 
 void Ler_entrada(char *Arquivo_entrada)
 {
-	char buffer[MAX];
-	char *comando;
+	char *buffer;
+	char *comando, *verbo, *conteudo;
 	char *add = "# add";
-	dici *dicionario;
-	dicionario = (dici*)malloc(sizeof(dici));
-
+	TipoArvore *dicionario;
+	
+	buffer = (char*)malloc(MAX*sizeof(char));
 	FILE *fp = fopen(Arquivo_entrada , "r");
 	if (!fp)
 	{
 		Imprime_erros(-2);
 	}
 	
-	while (!feof(fp))
+	//cria lista vazia
+	Cria_arvore(dicionario);
+
+	//Loop para ler o arquivo de entrada
+	while (1)
 	{
 		fgets(&buffer[0] , MAX , fp);
-		if (feof(fp)) break;
-		printf("%s\n",buffer);
+		
+		//sai do while quando terminar de ler o arquivo
+		if (feof(fp)) 
+		{
+			break;
+		}
+		
 		comando = strtok(&buffer[0], " # ");
-		dicionario->palavra = strtok (NULL," #");
-		dicionario->def = strtok (NULL,"#");
-		printf ("%s\n", comando);
-		// if (strcmp(comando, add))
-		// {
-		// 	dicionario->def = &dicionario->def[1];
-		// 	printf("%s (Verbete)\n\n%s (Significado)\n\n", dicionario->palavra, dicionario->def);
-		// 	return;
-		// }
+		verbo = strtok (NULL," #");
+		conteudo = strtok (NULL,"#");
+		conteudo = &conteudo[1];
+		conteudo[strlen(conteudo)-1] = '\0';
+
+		if (strcmp(comando, add))
+		{
+			printf("entrei\n");
+			if(vazia(dicionario))
+			{
+				dicionario->Raiz = CriaNo(verbo, conteudo);
+			}
+			else
+			{
+				InsereNo(verbo, conteudo, dicionario);
+			}
+		}
 
 	}
 	printf("antes\n");
-
+	free(buffer);
 	printf("APOS\n");
 }
 
@@ -50,10 +69,17 @@ void Imprime_erros(int error)
 		printf("./dicionario <entrada> <saida> <arquivo de dicionario>\n\n");
 		printf("APLICACAO TERMINADA!!!\n\n");
 		break;
+		
 		case -2:
 		printf("Erro ao tentar abrir o arquivo de entrada.\n\n");
 		printf("APLICACAO TERMINADA!!!\n\n");
 		break;
+		
+		case -3:
+		printf("Erro ao alocar arvore do dicionario.\n\n");
+		printf("APLICACAO TERMINADA!!!\n\n");
 	}
 	exit(1);
 }
+
+
