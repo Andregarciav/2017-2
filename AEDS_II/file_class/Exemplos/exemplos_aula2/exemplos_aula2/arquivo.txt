@@ -1,0 +1,1 @@
+Exemplo de funcionamento de leitura e escrita de arquivos

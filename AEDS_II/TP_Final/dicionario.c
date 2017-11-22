@@ -6,11 +6,11 @@
 
 void Ler_entrada(char *Arquivo_entrada)
 {
-	char *buffer;
+	char buffer[MAX];
 	char *comando;
 	char *add = "# add";
 	dici *dicionario;
-	buffer = malloc(MAX*sizeof(char));
+	dicionario = (dici*)malloc(sizeof(dici));
 
 	FILE *fp = fopen(Arquivo_entrada , "r");
 	if (!fp)
@@ -20,20 +20,24 @@ void Ler_entrada(char *Arquivo_entrada)
 	
 	while (!feof(fp))
 	{
-		fgets(buffer , MAX , fp);
-		comando = strtok(buffer, " # ");
-		dicionario->palavra = strtok (NULL," # ");
-		dicionario->def = strtok (NULL," # ");
-		if (strcmp(comando, add))
-		{
-			 printf("DEU\n");
-			 return;
-		}
+		fgets(&buffer[0] , MAX , fp);
+		if (feof(fp)) break;
 		printf("%s\n",buffer);
+		comando = strtok(&buffer[0], " # ");
+		dicionario->palavra = strtok (NULL," #");
+		dicionario->def = strtok (NULL,"#");
+		printf ("%s\n", comando);
+		// if (strcmp(comando, add))
+		// {
+		// 	dicionario->def = &dicionario->def[1];
+		// 	printf("%s (Verbete)\n\n%s (Significado)\n\n", dicionario->palavra, dicionario->def);
+		// 	return;
+		// }
 
 	}
-	printf ("%s\n", comando);
-	free(buffer);
+	printf("antes\n");
+
+	printf("APOS\n");
 }
 
 void Imprime_erros(int error)
