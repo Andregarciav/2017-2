@@ -3,8 +3,6 @@
 
 void Cria_arvore(TipoArvore* arvore)
 {
-	
-	arvore = (TipoArvore*)malloc(sizeof(TipoArvore));
 
 	if (arvore == NULL)
 	{
@@ -33,15 +31,69 @@ TipoNo *CriaNo(char *palavra, char* def)
     return novo;
 }
 
-void InsereNo(char *palavra, char *def, TipoArvore *arvore)
+void InsereNo(char *palavra, char *def, TipoNo *arvore)
 {   
     int compara = 0;
     
-    compara = strcmp(palavra, arvore->Raiz->palavra);
-    printf("entrei\n");
+    compara = strcmp(palavra, arvore->palavra);
+    printf("aqui\n");
     //palavra menor que arvore vai para a esquerda
     if(compara < 0)
     {
-        printf("entrei\n");
+        if (arvore->esquerda != NULL)
+        {
+            InsereNo(palavra, def, arvore->esquerda);
+        }
+        else
+        {
+            
+            TipoNo *novo = CriaNo(palavra, def);
+            arvore->esquerda = novo;
+
+        }
     }
+
+    if(compara > 0)
+    {
+        if (arvore->direita != NULL)
+        {
+            InsereNo(palavra, def, arvore->direita);
+        }
+        else
+        {
+            TipoNo *novo = CriaNo(palavra, def);
+            arvore->esquerda = novo;
+        }
+    }
+
+    if(compara == 0)
+    {
+        //se Verbete já existe Não faz nada
+        return;
+    }
+}
+
+char *ProcuraNo (char *palavra, TipoNo *arvore)
+{
+    int compara;
+    compara = strcmp(palavra, arvore->palavra);
+    if (arvore == NULL)
+    {
+        Imprime_erros(-4);
+    }
+    
+    else if (compara < 0)
+    {
+        ProcuraNo(palavra, arvore->esquerda);
+    }
+
+    else if (compara > 0)
+    {
+        ProcuraNo(palavra , arvore->direita);
+    }
+    else
+    {
+        return arvore->def;
+    }
+    return NULL;
 }

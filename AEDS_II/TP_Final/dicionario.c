@@ -6,57 +6,81 @@
 #include "tree.h"
 
 
-void Ler_entrada(char *Arquivo_entrada)
+void Ler_entrada(char *Arquivo_entrada, char* Arquivo_saida)
 {
 	char *buffer;
 	char *comando, *verbo, *conteudo;
-	char *add = "# add";
-	TipoArvore *dicionario;
+	char add[] = "# add";
+	char search[] = "# search";
+	TipoArvore *dicionario = NULL;
 	
 	buffer = (char*)malloc(MAX*sizeof(char));
-	FILE *fp = fopen(Arquivo_entrada , "r");
-	if (!fp)
+	
+
+	dicionario = (TipoArvore*)malloc(sizeof(TipoArvore));
+	
+	FILE *fp_in = fopen(Arquivo_entrada , "r");
+	if (!fp_in)
 	{
 		Imprime_erros(-2);
+	}
+	FILE *fp_out = fopen(Arquivo_saida , "w");
+	if (!fp_in)
+	{
+		Imprime_erros(-6);
 	}
 	
 	//cria lista vazia
 	Cria_arvore(dicionario);
+	if (dicionario == NULL)
+		exit(1);
 
 	//Loop para ler o arquivo de entrada
 	while (1)
 	{
-		fgets(&buffer[0] , MAX , fp);
+		fgets(buffer, MAX , fp_in);
 		
 		//sai do while quando terminar de ler o arquivo
-		if (feof(fp)) 
+		if (feof(fp_in)) 
 		{
 			break;
 		}
 		
-		comando = strtok(&buffer[0], " # ");
-		verbo = strtok (NULL," #");
-		conteudo = strtok (NULL,"#");
-		conteudo = &conteudo[1];
-		conteudo[strlen(conteudo)-1] = '\0';
-
-		if (strcmp(comando, add))
+		printf("%s\n captura buffer\n",buffer);
+		comando = strtok(buffer, " # ");
+		printf("%s\n captura comando\n",buffer);
+		//caso comando seja = '# add'
+		if (strcmp(comando, add) == 0)
 		{
-			printf("entrei\n");
+			verbo = strtok (NULL," #");
+			conteudo = strtok (NULL,"#");
+			conteudo = &conteudo[1];
+			conteudo[strlen(conteudo)-1] = '\0';
 			if(vazia(dicionario))
 			{
 				dicionario->Raiz = CriaNo(verbo, conteudo);
 			}
 			else
 			{
-				InsereNo(verbo, conteudo, dicionario);
+				InsereNo(verbo, conteudo, dicionario->Raiz);
 			}
 		}
-
+		
+		if (strcmp(comando, search) == 0)
+		{
+			verbo = strtok (NULL," #");
+			printf("%s comando\n",comando);
+			conteudo = ProcuraNo(verbo, dicionario->Raiz);
+			if (conteudo == NULL)
+			{
+				Imprime_erros (-5);
+			}
+			fprintf(fp_out ,"%s # %s", verbo , conteudo);
+		}
 	}
-	printf("antes\n");
+	
 	free(buffer);
-	printf("APOS\n");
+	
 }
 
 void Imprime_erros(int error)
@@ -78,6 +102,20 @@ void Imprime_erros(int error)
 		case -3:
 		printf("Erro ao alocar arvore do dicionario.\n\n");
 		printf("APLICACAO TERMINADA!!!\n\n");
+		break;
+
+		case -4:
+		printf("Erro, verbete nao encotrado.\n\n");
+		break;//tentar função que imprime em arquivo não encontrado 
+
+		case -5:
+		printf("Erro ao tentar procurar verbete.\n\n");
+		break;
+
+		case -6:
+		printf("Erro ao tentar abrir o arquivo de saida.\n\n");
+		printf("APLICACAO TERMINADA!!!\n\n");
+		break;
 	}
 	exit(1);
 }

@@ -21,4 +21,6 @@ TipoNo *CriaNo(char *palavra, char* def);
 
 void Imprime_erros(int);
 
-void InsereNo(char*, char*, TipoArvore*);
+void InsereNo(char*, char*, TipoNo*);
+
+char *ProcuraNo (char *, TipoNo *);

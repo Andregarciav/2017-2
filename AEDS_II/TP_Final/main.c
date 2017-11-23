@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     dicionario = argv[3];
 
     printf("%s , %s , %s\n", entrada , saida, dicionario);
-    Ler_entrada (entrada);
+    Ler_entrada (entrada , saida);
 
     return 0;
 }
