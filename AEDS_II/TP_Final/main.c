@@ -17,12 +17,13 @@ int main(int argc, char **argv)
         Imprime_erros(-1);
     }
 
+    // copia as strings argv para suas respectivas variáveis
     entrada = argv[1];
     saida = argv[2];
     dicionario = argv[3];
 
-    printf("%s , %s , %s\n", entrada , saida, dicionario);
-    Ler_entrada (entrada , saida);
+    //chama a função no TAD que tratará o dicionário
+    Ler_entrada (entrada , saida, dicionario);
 
     return 0;
 }

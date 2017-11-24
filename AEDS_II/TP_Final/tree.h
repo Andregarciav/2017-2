@@ -24,3 +24,7 @@ void Imprime_erros(int);
 void InsereNo(char*, char*, TipoNo*);
 
 char *ProcuraNo (char *, TipoNo *);
+
+void ImprimeNo (TipoNo *, FILE*);
+
+void FreeNo(TipoNo *);
