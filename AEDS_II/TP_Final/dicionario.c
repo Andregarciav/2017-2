@@ -46,16 +46,18 @@ void Ler_entrada(char *Arquivo_entrada, char* Arquivo_saida)
 			break;
 		}
 		
-		printf("%s\n captura buffer\n",buffer);
-		comando = strtok(buffer, " # ");
+		//printf("%s\n captura buffer\n",buffer);
+		comando = strtok(buffer, "# ");
+		printf("%s\n captura comando\n",buffer);
+		comando[strlen(comando)]='\0';
 		printf("%s\n captura comando\n",buffer);
 		//caso comando seja = '# add'
-		if (strcmp(comando, add) == 0)
+		if (strcmp(comando, add))
 		{
 			verbo = strtok (NULL," #");
 			conteudo = strtok (NULL,"#");
 			conteudo = &conteudo[1];
-			conteudo[strlen(conteudo)-1] = '\0';
+			//conteudo[strlen(conteudo)-1] = '\0';
 			if(vazia(dicionario))
 			{
 				dicionario->Raiz = CriaNo(verbo, conteudo);
@@ -64,12 +66,14 @@ void Ler_entrada(char *Arquivo_entrada, char* Arquivo_saida)
 			{
 				InsereNo(verbo, conteudo, dicionario->Raiz);
 			}
+			printf("Entrou add");
 		}
 		
-		if (strcmp(comando, search) == 0)
+		if (strcmp(comando, search))
 		{
 			verbo = strtok (NULL," #");
-			printf("%s comando\n",comando);
+			
+			printf("%s , %s entrou search\n",comando , verbo);
 			conteudo = ProcuraNo(verbo, dicionario->Raiz);
 			if (conteudo == NULL)
 			{
