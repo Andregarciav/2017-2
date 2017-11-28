@@ -116,6 +116,8 @@ void Ler_entrada(char *Arquivo_entrada, char* Arquivo_saida, char* Arquivo_dicio
 		/*
 		 *	A função recebe como parametro onde irá imprimir
 		 */
+		comando[strlen(comando)-1] = '\0';
+		 
 		if (strcmp(comando, sort) == 0)
 		{
 			ImprimeNo(dicionario->Raiz, fp_dici);
@@ -138,7 +140,7 @@ void Ler_entrada(char *Arquivo_entrada, char* Arquivo_saida, char* Arquivo_dicio
 
 void Imprime_erros(int error)
 {
-	char e=1;//sair do programa?
+	char e=1;//sair do programa
 	switch (error)
 	{
 		case 0:
@@ -167,11 +169,11 @@ void Imprime_erros(int error)
 		break;
 
 		case -4:
-		printf("Erro, verbete nao encotrado.\n\n");
-		break;//tentar função que imprime em arquivo não encontrado 
+		printf("Erro, Arvore nao encotrada.\n\n");
+		break;
 
 		case -5:
-		printf("Erro ao tentar procurar verbete.\n\n");
+		printf("Erro, verbete não encotrado no dicionario.\n\n");
 		break;
 
 		case -6:
